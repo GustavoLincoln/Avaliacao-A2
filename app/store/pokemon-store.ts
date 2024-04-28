@@ -1,33 +1,31 @@
-import create from 'zustand';
-import pokemonData from '../data/pokemon-data';
-import { StaticImageData } from 'next/image';
+import { create } from 'zustand';
+import pokemonData, { Pokemon } from '../data/pokemon-data';
 
-export interface Pokemon {
-  id: number;
-  name: string;
-  image: StaticImageData; // Alterado para string para armazenar o caminho da imagem
-  types: { name: string; color: string }[];
-  previous: number;
-  next: number;
+interface PokemonState {
+  capturados: number[];
+  pokemons: Pokemon[];
+  capturePokemon: (id: number) => void;
+  releasePokemon: (id: number) => void;
+  getPokemonById: (id: number) => Pokemon | null;
 }
 
-interface PokemonStore {
-  pokemonList: Pokemon[];
-  setSelectedPokemon: (pokemonId: number) => void;
-  selectedPokemon: Pokemon | null;
-}
-
-const usePokemonStore = create<PokemonStore>((set) => ({
-  pokemonList: [], // Lista de Pokémon inicialmente vazia
-  setSelectedPokemon: (pokemonId: number) => {
-    set((state) => ({
-      selectedPokemon: state.pokemonList.find((pokemon) => pokemon.id === pokemonId) || null,
-    }));
+export const usePokemonStore = create<PokemonState>((set) => ({
+  capturados: [],
+  pokemons: pokemonData,
+  capturePokemon: (id) => set((state) => ({
+    capturados: [...state.capturados, id],
+    pokemons: state.pokemons.map(pokemon =>
+      pokemon.id === id ? { ...pokemon, captured: true } : pokemon
+    )
+  })),
+  releasePokemon: (id: number) => set((state) => ({
+    capturados: state.capturados.filter(i => i !== id),
+    pokemons: state.pokemons.map(pokemon =>
+      pokemon.id === id ? { ...pokemon, captured: false } : pokemon
+    )
+  })),
+  getPokemonById: (id: number) => {
+    const pokemon = pokemonData.find((p) => p.id === id);
+    return pokemon || null;
   },
-  selectedPokemon: null,
 }));
-
-// Carregar os dados dos Pokémon para a store
-usePokemonStore.setState({ pokemonList: pokemonData });
-
-export default usePokemonStore;

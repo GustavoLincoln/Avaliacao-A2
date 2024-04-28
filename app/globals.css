@@ -26,6 +26,13 @@ body {
     rgb(var(--background-start-rgb)); */
     background-color: #FFF;
     color: #000;
+
+    .captured {
+      border: 2px solid red;
+      img {
+        filter: none;
+      }
+    }
 }
 
 @layer utilities {
