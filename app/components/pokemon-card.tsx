@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Pokemon } from '../data/pokemon-data';
-import pokeballImage from '../assets/pokebola.png';
+import pokeballImage from '/public/assets/pokebola.png';
 
 interface PokemonCardProps {
   pokemon: Pokemon;
@@ -19,8 +19,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, capturePokemon, rele
       releasePokemon(id);
     } else {
       capturePokemon(id);
-    }
-    
+    }    
   };
 
   return (
@@ -39,7 +38,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, capturePokemon, rele
         <div>
           <button onClick={handleCapture} className="relative flex items-center">
             <Image src={pokeballImage} alt="Pokébola" className="grayscale w-4 h-4 mr-2" />
-            {capturado ? 'Liberar' : 'Capturar'}
+            {capturado ? 'Free' : 'Catch'}
           </button>
         </div>
       </div>
